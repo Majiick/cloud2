@@ -78,7 +78,7 @@ def nodes():
 @app.route('/containers', methods=['POST'])
 def containers_create():
     # Create a container with ?image=<imagename>
-    output = docker('create', str(request.args.get('image')))
+    output = docker('container', ''create', str(request.args.get('image')))
     resp = output
 
     return Response(response=resp, mimetype="application/json")
