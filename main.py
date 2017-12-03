@@ -36,6 +36,8 @@ def containers_index():
             resp = json.dumps(parse_docker_ps(output))
         else:
             output = docker('ps', '-a')
+            print("aut")
+            print(output)
             resp = json.dumps(parse_docker_ps(output))
     except subprocess.CalledProcessError as e:
         return json_error(str(e))
