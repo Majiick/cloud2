@@ -62,6 +62,7 @@ def containers_specific_logs(id_):
     return Response(response=resp, mimetype="application/json")
 
 
+# Works
 @app.route('/services', methods=['GET'])
 def services():
     def parse_docker_service_ls(output):
@@ -86,7 +87,7 @@ def services():
 
 @app.route('/nodes', methods=['GET'])
 def nodes():
-    output = docker('node' 'ls')
+    output = docker('node', 'ls')
     resp = output
 
     return Response(response=resp, mimetype="application/json")
