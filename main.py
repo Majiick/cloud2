@@ -39,7 +39,7 @@ def containers_index():
             output = docker('ps', '-a')
             resp = json.dumps(parse_docker_ps(output))
     except subprocess.CalledProcessError as e:
-        return json_error(str(e))
+        return json_error(str(e) + ' ' + str(e.output))
 
     return Response(response=resp, mimetype="application/json")
 
@@ -59,7 +59,7 @@ def containers_specific_logs(id_):
     try:
         output = docker('logs', str(id_))
     except subprocess.CalledProcessError as e:
-        return json_error(str(e))
+        return json_error(str(e) + ' ' + str(e.output))
 
     resp = json.dumps({'result': output})
 
