@@ -136,7 +136,7 @@ def images_delete_id(id_):
 
 
 def docker(*args):
-    print("Running: {}".format(['docker'] + list(args)))
+    print("Running: {}".format(' '.join((['docker'] + list(args)))))
     try:
         completed_process = subprocess.run(' '.join((['docker'] + list(args))), shell=True, check=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
     except subprocess.CalledProcessError as e:
