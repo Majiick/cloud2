@@ -155,6 +155,7 @@ def containers_delete_id(id_):
     return Response(response=resp, mimetype="application/json")
 
 
+# Works
 @app.route('/images', methods=['GET'])
 def images_get():
     def docker_images_to_array(output):
@@ -168,7 +169,11 @@ def images_get():
 
         return ret
 
-    output = docker('image', 'ls')
+    try:
+        output = docker('image', 'ls')
+    except subprocess.CalledProcessError as e:
+        return json_error(str(e) + ' ' + str(e.output))
+
     resp = json.dumps(docker_images_to_array(output))
 
     return Response(response=resp, mimetype="application/json")
@@ -176,7 +181,11 @@ def images_get():
 
 @app.route('/containers', methods=['DELETE'])
 def containers_delete():
-    output = docker('rm', '$(docker ps -a -q)')
+    try:
+        output = docker('rm', '$(docker ps -a -q)')
+    except subprocess.CalledProcessError as e:
+        return json_error(str(e) + ' ' + str(e.output))
+
     resp = output
 
     return Response(response=resp, mimetype="application/json")
