@@ -257,5 +257,40 @@ def images_create():
     return Response(response=resp, mimetype="application/json")
 
 
+@app.route('/containers/<id_>', methods=['PATCH'])
+def containers_update(id_):
+    '''
+    curl -X PATCH http://localhost:8080/containers/xxx?action=stop'
+    curl -X PATCH http://localhost:8080/containers/xxx?action=start'
+    '''
+
+    try:
+        if request.args.get('action') == 'start':
+            output = docker('restart', id_)
+        else:
+            output = docker('stop', id_)
+    except subprocess.CalledProcessError as e:
+        return json_error(str(e) + ' ' + str(e.output))
+
+    resp = json.dumps({'success': True, 'message': output})
+    return Response(response=resp, mimetype="application/json")
+
+
+@app.route('/images/<id_>', methods=['PATCH'])
+def images_update(id_):
+    """
+    curl -s -X PATCH http://localhost:8080/images/xxx?tag=xxx'
+    """
+    tag = request.args.get('tag')
+
+    try:
+        output = docker("tag", id, tag)
+    except subprocess.CalledProcessError as e:
+        return json_error(str(e) + ' ' + str(e.output))
+
+    resp = json.dumps({'success': True, 'message': output})
+    return Response(response=resp, mimetype="application/json")
+
+
 if __name__ == '__main__':
     app.run()
