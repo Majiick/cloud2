@@ -164,7 +164,7 @@ def images_get():
             each['id'] = c[2]
             each['tag'] = c[1]
             each['name'] = c[0]
-            all.append(each)
+            ret.append(each)
 
         return ret
 
