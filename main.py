@@ -86,7 +86,7 @@ def services():
     try:
         output = docker('service', 'ls')
     except subprocess.CalledProcessError as e:
-        return json_error(str(e))
+        return json_error(str(e) + ' ' + str(e.output))
 
     resp = json.dumps(parse_docker_service_ls(output))
 
@@ -111,7 +111,8 @@ def nodes():
     try:
         output = docker('node', 'ls')
     except subprocess.CalledProcessError as e:
-        return json_error(str(e))
+        return json_error(str(e) + ' ' + str(e.output))
+
     resp = json.dumps(parse_docker_node_ls(output))
 
     return Response(response=resp, mimetype="application/json")
@@ -124,7 +125,7 @@ def containers_create():
     try:
         output = docker('container', 'create', str(request.args.get('image')))
     except subprocess.CalledProcessError as e:
-        return json_error(str(e))
+        return json_error(str(e) + ' ' + str(e.output))
 
     resp = json.dumps({'success': 'true', 'message': output})
 
@@ -147,7 +148,7 @@ def containers_delete_id(id_):
     try:
         output = docker('rm', str(id_))
     except subprocess.CalledProcessError as e:
-        return json_error(str(e))
+        return json_error(str(e) + ' ' + str(e.output))
 
     resp = json.dumps({'success': 'true', 'message': output})
 
