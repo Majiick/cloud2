@@ -1,6 +1,6 @@
 DockerCMS ReadME, Zan Smirnov C15437072
 
-Video:
+Video: https://youtu.be/FvkVLIfCFgc
 
 #Setup:#
 1. First build the image with `docker build -t cloud2 .`
