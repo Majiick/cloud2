@@ -1,6 +1,24 @@
-from flask import Flask, Response, render_template, request
+from flask import Flask, Response, request
 import json
 import subprocess
+
+'''
+GET /containers List all containers DONE
+GET /containers?state=running List running containers (only) DONE
+GET /containers/&lt;id&gt; Inspect a specific container DONE
+GET /containers/&lt;id&gt;/logs Dump specific container logs DONE
+GET /services List all service DONE
+GET /nodes List all nodes in the swarm DONE
+POST /containers Create a new container DONE
+PATCH /containers/&lt;id&gt; Change a container&#39;s state XXX
+containers/&lt;id&gt; DELETE / Delete a specific container DONE
+DELETE /containers Delete all containers (including running) DONE
+GET /images List all images DONE
+POST /images Create a new image XXX
+PATCH /images/&lt;id&gt; Change a specific image&#39;s attributes XXX
+DELETE /images/&lt;id&gt; Delete a specific image DONE
+DELETE /images Delete all images DONE
+'''
 
 
 app = Flask(__name__)
@@ -192,6 +210,7 @@ def containers_delete():
     return Response(response=resp, mimetype="application/json")
 
 
+# Works
 @app.route('/images', methods=['DELETE'])
 def images_delete():
     try:
@@ -204,7 +223,10 @@ def images_delete():
 
 @app.route('/images/<id_>', methods=['DELETE'])
 def images_delete_id(id_):
-    resp = docker('rmi', str(id_))
+    try:
+        resp = docker('rmi', str(id_))
+    except subprocess.CalledProcessError as e:
+        return json_error(str(e) + ' ' + str(e.output))
 
     return Response(response=resp, mimetype="application/json")
 
@@ -219,6 +241,20 @@ def docker(*args):
         raise
 
     return completed_process.stdout.decode(encoding='UTF-8')
+
+
+@app.route('/images', methods=['POST'])
+def images_create():
+    uploaded_file = request.files['file']
+    uploaded_file.save('uploaded_file.image')
+
+    try:
+        output = docker('build', '-t', 'custom', '.')
+    except subprocess.CalledProcessError as e:
+        return json_error(str(e) + ' ' + str(e.output))
+
+    resp = json.dumps({'success': True, 'message': output})
+    return Response(response=resp, mimetype="application/json")
 
 
 if __name__ == '__main__':
