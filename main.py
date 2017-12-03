@@ -106,6 +106,7 @@ def nodes():
     return Response(response=resp, mimetype="application/json")
 
 
+# Works
 @app.route('/containers', methods=['POST'])
 def containers_create():
     # Create a container with ?image=<imagename>
@@ -125,10 +126,11 @@ def containers_patch():
 '''
 
 
+
 @app.route('/containers/<id_>', methods=['DELETE'])
 def containers_delete_id(id_):
     output = docker('rm', str(id_))
-    resp = output
+    resp = json.dumps({'success': 'true', 'message': output})
 
     return Response(response=resp, mimetype="application/json")
 
