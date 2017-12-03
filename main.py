@@ -56,7 +56,11 @@ def containers_specific(id_):
 # Works
 @app.route('/containers/<id_>/logs', methods=['GET'])
 def containers_specific_logs(id_):
-    output = docker('logs', str(id_))
+    try:
+        output = docker('logs', str(id_))
+    except subprocess.CalledProcessError as e:
+        return json_error(str(e))
+
     resp = json.dumps({'result': output})
 
     return Response(response=resp, mimetype="application/json")
@@ -79,7 +83,11 @@ def services():
 
         return ret
 
-    output = docker('service', 'ls')
+    try:
+        output = docker('service', 'ls')
+    except subprocess.CalledProcessError as e:
+        return json_error(str(e))
+
     resp = json.dumps(parse_docker_service_ls(output))
 
     return Response(response=resp, mimetype="application/json")
@@ -100,7 +108,10 @@ def nodes():
 
         return ret
 
-    output = docker('node', 'ls')
+    try:
+        output = docker('node', 'ls')
+    except subprocess.CalledProcessError as e:
+        return json_error(str(e))
     resp = json.dumps(parse_docker_node_ls(output))
 
     return Response(response=resp, mimetype="application/json")
@@ -110,7 +121,11 @@ def nodes():
 @app.route('/containers', methods=['POST'])
 def containers_create():
     # Create a container with ?image=<imagename>
-    output = docker('container', 'create', str(request.args.get('image')))
+    try:
+        output = docker('container', 'create', str(request.args.get('image')))
+    except subprocess.CalledProcessError as e:
+        return json_error(str(e))
+
     resp = json.dumps({'success': 'true', 'message': output})
 
     return Response(response=resp, mimetype="application/json")
@@ -129,7 +144,11 @@ def containers_patch():
 
 @app.route('/containers/<id_>', methods=['DELETE'])
 def containers_delete_id(id_):
-    output = docker('rm', str(id_))
+    try:
+        output = docker('rm', str(id_))
+    except subprocess.CalledProcessError as e:
+        return json_error(str(e))
+
     resp = json.dumps({'success': 'true', 'message': output})
 
     return Response(response=resp, mimetype="application/json")
