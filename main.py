@@ -87,8 +87,20 @@ def services():
 
 @app.route('/nodes', methods=['GET'])
 def nodes():
+    def parse_docker_node_ls(output):
+        ret = []
+        for c in [line.split() for line in output.splitlines()[1:]]:
+            each = dict()
+            each['id'] = c[0]
+            each['hostname'] = c[1]
+            each['status'] = c[2]
+            each['availability'] = c[3]
+            ret.append(each)
+
+            return ret
+
     output = docker('node', 'ls')
-    resp = output
+    resp = json.dumps(parse_docker_node_ls(output))
 
     return Response(response=resp, mimetype="application/json")
 
