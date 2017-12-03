@@ -10,6 +10,7 @@ def json_error(err: str):
     return json.dumps({'error': err})
 
 
+# Works
 @app.route('/containers', methods=['GET'])
 def containers_index():
     """
@@ -43,6 +44,7 @@ def containers_index():
     return Response(response=resp, mimetype="application/json")
 
 
+# Works
 @app.route('/containers/<id_>', methods=['GET'])
 def containers_specific(id_):
     output = docker('inspect', str(id_))
@@ -51,17 +53,18 @@ def containers_specific(id_):
     return Response(response=resp, mimetype="application/json")
 
 
+# Works
 @app.route('/containers/<id_>/logs', methods=['GET'])
 def containers_specific_logs(id_):
     output = docker('logs', str(id_))
-    resp = output
+    resp = json.dumps({'result': output})
 
     return Response(response=resp, mimetype="application/json")
 
 
 @app.route('/services', methods=['GET'])
 def services():
-    output = docker('service' 'ps')
+    output = docker('service' 'ls')
     resp = output
 
     return Response(response=resp, mimetype="application/json")
