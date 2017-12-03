@@ -179,6 +179,7 @@ def images_get():
     return Response(response=resp, mimetype="application/json")
 
 
+# Works
 @app.route('/containers', methods=['DELETE'])
 def containers_delete():
     try:
@@ -186,14 +187,17 @@ def containers_delete():
     except subprocess.CalledProcessError as e:
         return json_error(str(e) + ' ' + str(e.output))
 
-    resp = output
+    resp = json.dumps({'success': True, 'message': output})
 
     return Response(response=resp, mimetype="application/json")
 
 
 @app.route('/images', methods=['DELETE'])
 def images_delete():
-    resp = docker('rmi', '$(docker images -q)')
+    try:
+        resp = docker('rmi', '$(docker images -q)')
+    except subprocess.CalledProcessError as e:
+        return json_error(str(e) + ' ' + str(e.output))
 
     return Response(response=resp, mimetype="application/json")
 
