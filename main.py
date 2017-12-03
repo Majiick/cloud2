@@ -64,8 +64,22 @@ def containers_specific_logs(id_):
 
 @app.route('/services', methods=['GET'])
 def services():
+    def parse_docker_service_ls(output):
+        ret = []
+        for c in [line.split() for line in output.splitlines()[1:]]:
+            each = dict()
+            each['id'] = c[0]
+            each['name'] = c[1]
+            each['mode'] = c[2]
+            each['replicas'] = c[3]
+            each['image'] = c[4]
+            each['ports'] = c[5]
+            ret.append(each)
+
+        return ret
+
     output = docker('service', 'ls')
-    resp = output
+    resp = json.dumps(parse_docker_service_ls(output))
 
     return Response(response=resp, mimetype="application/json")
 
