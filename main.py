@@ -150,16 +150,6 @@ def containers_create():
     return Response(response=resp, mimetype="application/json")
 
 
-'''
-@app.route('/containers/<id_>', methods=['PATCH'])
-def containers_patch():
-    output = docker('create' 'hello-world')
-    resp = output
-
-    return Response(response=resp, mimetype="application/json")
-'''
-
-
 # Works
 @app.route('/containers/<id_>', methods=['DELETE'])
 def containers_delete_id(id_):
@@ -221,6 +211,7 @@ def images_delete():
     return Response(response=resp, mimetype="application/json")
 
 
+# Works
 @app.route('/images/<id_>', methods=['DELETE'])
 def images_delete_id(id_):
     try:
@@ -257,6 +248,7 @@ def images_create():
     return Response(response=resp, mimetype="application/json")
 
 
+# Works
 @app.route('/containers/<id_>', methods=['PATCH'])
 def containers_update(id_):
     '''
@@ -276,10 +268,11 @@ def containers_update(id_):
     return Response(response=resp, mimetype="application/json")
 
 
+# Works
 @app.route('/images/<id_>', methods=['PATCH'])
 def images_update(id_):
     """
-    curl -s -X PATCH http://localhost:8080/images/xxx?tag=xxx'
+    curl -s -X PATCH http://localhost:8080/images/xxx?tag=xxx
     """
     tag = request.args.get('tag')
 
