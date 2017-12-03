@@ -64,7 +64,7 @@ def containers_specific_logs(id_):
 
 @app.route('/services', methods=['GET'])
 def services():
-    output = docker('service' 'ls')
+    output = docker('service', 'ls')
     resp = output
 
     return Response(response=resp, mimetype="application/json")
@@ -136,7 +136,6 @@ def images_delete_id(id_):
 
 
 def docker(*args):
-    print(['docker'] + list(args))
     print("Running: {}".format(' '.join((['docker'] + list(args)))))
     try:
         completed_process = subprocess.run(' '.join((['docker'] + list(args))), shell=True, check=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
