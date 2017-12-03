@@ -140,7 +140,7 @@ def docker(*args):
         print(e)
         raise
 
-    return completed_process.stdout.encode(encoding='UTF-8')
+    return completed_process.stdout.decode(encoding='UTF-8')
 
 
 if __name__ == '__main__':
