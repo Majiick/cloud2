@@ -97,7 +97,7 @@ def nodes():
             each['availability'] = c[3]
             ret.append(each)
 
-            return ret
+        return ret
 
     output = docker('node', 'ls')
     resp = json.dumps(parse_docker_node_ls(output))
