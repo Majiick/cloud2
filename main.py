@@ -85,6 +85,7 @@ def services():
     return Response(response=resp, mimetype="application/json")
 
 
+# Works
 @app.route('/nodes', methods=['GET'])
 def nodes():
     def parse_docker_node_ls(output):
@@ -109,7 +110,7 @@ def nodes():
 def containers_create():
     # Create a container with ?image=<imagename>
     output = docker('container', 'create', str(request.args.get('image')))
-    resp = output
+    resp = json.dumps({'success': 'true', 'message': output})
 
     return Response(response=resp, mimetype="application/json")
 
