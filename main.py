@@ -142,7 +142,7 @@ def containers_patch():
 '''
 
 
-
+# Works
 @app.route('/containers/<id_>', methods=['DELETE'])
 def containers_delete_id(id_):
     try:
@@ -157,8 +157,19 @@ def containers_delete_id(id_):
 
 @app.route('/images', methods=['GET'])
 def images_get():
+    def docker_images_to_array(output):
+        ret = []
+        for c in [line.split() for line in output.splitlines()[1:]]:
+            each = dict()
+            each['id'] = c[2]
+            each['tag'] = c[1]
+            each['name'] = c[0]
+            all.append(each)
+
+        return ret
+
     output = docker('image', 'ls')
-    resp = output
+    resp = json.dumps(docker_images_to_array(output))
 
     return Response(response=resp, mimetype="application/json")
 
